@@ -36,7 +36,7 @@ namespace BallTree
 
         private static int PredictTheOutcome()
         {
-            return random.Next(0, 16);
+            return random.Next(0, numberContainers);
         }
 
         private static void InitialiseSystem(int depth)
