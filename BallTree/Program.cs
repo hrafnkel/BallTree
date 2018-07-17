@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,7 +14,8 @@ namespace BallTree
         private static char left = 'L';
         private static char right = 'R';
         private static char none = 'N';
-        
+        private static List<TreeNode> leafNodes = new List<TreeNode>();
+
         static void Main(string[] args)
         {
             int depth = Helpers.GetDepthFromArgs(args);
@@ -136,29 +137,25 @@ namespace BallTree
 
         private static int FindEmptyBucket(int depth)
         {
-            List<TreeNode> buckets = ConvertTreeToList(root);
+            List<TreeNode> buckets = GetLeafNodes(root);
             int? empty = buckets.Where(x => x.BallPresent == false && x.Depth == depth).Select(x => x.BucketNumber).First();
-            
+
             return (int) empty;
         }
 
-        private static List<TreeNode> ConvertTreeToList(TreeNode root)
+        private static List<TreeNode> GetLeafNodes(TreeNode node)
         {
-            var result = new List<TreeNode>();
-            ConvertTreeToList(root, result);
-            return result;
-        }
-
-        private static void ConvertTreeToList(TreeNode root, List<TreeNode> result)
-        {
-            if (root == null)
+            if((node.LeftNode == null) && (node.RightNode == null))
             {
-                return;
+                leafNodes.Add(node);
+            }
+            else
+            {
+                if (node.LeftNode != null) GetLeafNodes(node.LeftNode);
+                if (node.RightNode != null) GetLeafNodes(node.RightNode);
             }
 
-            result.Add(root);
-            ConvertTreeToList(root.LeftNode, result);
-            ConvertTreeToList(root.RightNode, result);
+            return leafNodes;
         }
 
         private static char FlipTheGate(char status)
